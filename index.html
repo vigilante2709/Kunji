@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>For Kunji</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<style>
+html, body {
+  margin:0; padding:0; height:100%; overflow:hidden;
+  font-family: 'Playfair Display', serif;
+  display:flex; justify-content:center; align-items:center;
+  background: linear-gradient(135deg, #ff2d55, #ffb6c1, #ffffff);
+  background-size: 600% 600%; animation: gradientShift 15s ease infinite;
+}
+@keyframes gradientShift {
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+#container { max-width:90%; text-align:center; z-index:10; }
+h2 { font-size:28px; font-weight:700; margin-bottom:20px; color:#d81b60; }
+p { font-size:18px; line-height:1.8; color:#333; }
+button {
+  padding: 12px 25px; margin:10px; border:none; border-radius:50px;
+  background-color:#ff85a2; cursor:pointer; font-size:18px; color:#fff;
+  position: relative; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+button:hover { transform: scale(1.05); box-shadow:0 8px 20px rgba(0,0,0,0.3);}
+.popup {
+  position: fixed; top:30%; left:50%; transform: translate(-50%, -50%);
+  background-color:#fff0f0; padding:15px 30px; border-radius:50px;
+  font-weight:bold; z-index:1000; font-size:16px; max-width:80vw; text-align:center;
+  color:#d81b60; box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+.hidden {display:none;}
+@keyframes shake {0%{transform:translateX(0);}25%{transform:translateX(-8px);}50%{transform:translateX(8px);}75%{transform:translateX(-8px);}100%{transform:translateX(0);}}
+@keyframes fallDown {0%{transform:translateY(0);}100%{transform:translateY(100vh) rotate(360deg);opacity:0;}}
+@keyframes explode {to{transform:translate(var(--x), var(--y)) scale(0);opacity:0;}}
+@keyframes floatHeart{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(120vh) rotate(360deg);opacity:0;}}
+@keyframes crackButtonLeft{0%{transform:translateX(0) rotate(0deg);}100%{transform:translateX(-50px) rotate(-20deg);opacity:0;}}
+@keyframes crackButtonRight{0%{transform:translateX(0) rotate(0deg);}100%{transform:translateX(50px) rotate(20deg);opacity:0;}}
+@keyframes fadeInText{0%{opacity:0;}100%{opacity:1;}}
+@media only screen and (max-width:400px){
+  h2{font-size:24px;} p{font-size:16px;} button{padding:10px 20px;font-size:16px;}
+}
+</style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div id="preloader" style="position:fixed;top:0;left:0;width:100%;height:100%;background-color:#ffb6c1;display:flex;justify-content:center;align-items:center;z-index:10000;flex-direction:column;cursor:pointer;">
+  <h2 style="font-size:26px;color:#fff;text-align:center;">Hey Kunji… ready for a surprise? 💌</h2>
+  <p style="font-size:18px;color:#fff;margin-top:10px;text-align:center;">Tap anywhere to start!</p>
+</div>
+
+<div id="container">
+  <h2 id="mainText"></h2>
+  <div id="buttons"></div>
+</div>
+
+<div id="popup" class="popup hidden"></div>
+<audio id="fallSound" src="https://www.soundjay.com/button/sounds/button-16.mp3"></audio>
+
+<script>
+let currentPage=1;
+const mainText=document.getElementById("mainText");
+const buttonsDiv=document.getElementById("buttons");
+const popup=document.getElementById("popup");
+const fallSound=document.getElementById("fallSound");
+
+// ------------------ PRELOADER ------------------
+const preloader=document.getElementById("preloader");
+preloader.addEventListener("click",()=>{
+  preloader.style.transition="opacity 0.5s"; preloader.style.opacity=0;
+  setTimeout(()=>{preloader.remove(); loadFirstPage();},500);
+});
+
+// ------------------ PAGE 1 ------------------
+const firstPagePopups=["Angane parayaruth 🥺","Njaaan parayum","Kashtam onde","MOLE PLEASE🥺","KANNIL CHORA VENAM","Unromantic moorachi","Ah engane irikanu","Dhe penne","Arodu parayan"];
+let popupIndex=0;
+
+function loadFirstPage(){
+  currentPage=1; popupIndex=0;
+  mainText.innerText="Kunji njan oru karyam parayatte?";
+  buttonsDiv.innerHTML=`<button id="yesBtn">Ah Paray</button><button id="noBtn">No Thanks</button>`;
+  document.getElementById("yesBtn").addEventListener("click", loadSecondPage);
+  document.getElementById("noBtn").addEventListener("click", showPopupSequential);
+}
+
+function showPopupSequential(){
+  popup.innerText=firstPagePopups[popupIndex];
+  popup.classList.remove("hidden");
+  setTimeout(()=>{popup.classList.add("hidden");},2000);
+  popupIndex++; if(popupIndex>=firstPagePopups.length){ popupIndex=0; } 
+}
+
+// ------------------ PAGE 2 ------------------
+const secondPagePopups=["Ayyo angane paranjooda","dhe penne velachil edukaruth ketto","Aah sheriyakki therame"];
+let noClickCount=0;
+
+function loadSecondPage(){
+  currentPage=2; noClickCount=0;
+  mainText.innerHTML=`Kunji ni nte jeevan aanedi<br><span style="font-size:28px; font-weight:bold;">I LOVE YOU</span>`;
+  buttonsDiv.innerHTML=`<button id="loveBtn">I LOVE YOU TOO</button><button id="noBtn2">No Thanks</button>`;
+  document.getElementById("loveBtn").addEventListener("click", loveButtonClicked);
+  document.getElementById("noBtn2").addEventListener("click", noThanksClicked);
+}
+
+function noThanksClicked(){
+  const btn=document.getElementById("noBtn2");
+  const loveBtn=document.getElementById("loveBtn");
+  noClickCount++;
+  if(noClickCount<=3){
+    btn.style.animation="shake 0.5s";
+    setTimeout(()=>{btn.style.animation="";},500);
+    popup.innerText=secondPagePopups[noClickCount-1];
+    popup.classList.remove("hidden");
+    setTimeout(()=>{popup.classList.add("hidden");},2000);
+  } else {
+    btn.style.transition="transform 2.5s linear, opacity 2.5s linear";
+    btn.style.transform="translateY(100vh) rotate(360deg)";
+    btn.style.opacity="0";
+    fallSound.play();
+    setTimeout(()=>{
+      popup.innerText="Nammade edutha kali 😈";
+      popup.classList.remove("hidden");
+      setTimeout(()=>{popup.classList.add("hidden");},4000);
+    },500);
+    loveBtn.style.transition="all 2.5s ease";
+    loveBtn.style.transform="translateY(0)";
+    loveBtn.style.fontSize="30px";
+    setTimeout(()=>{btn.remove();},2500);
+  }
+}
+
+// ------------------ LOVE BUTTON CRACK + HEARTS ------------------
+function loveButtonClicked(){
+  const loveBtn=document.getElementById("loveBtn");
+  const rect=loveBtn.getBoundingClientRect();
+  const leftHalf=document.createElement("div");
+  const rightHalf=document.createElement("div");
+  leftHalf.style.position="absolute"; leftHalf.style.width=rect.width/2+"px"; leftHalf.style.height=rect.height+"px";
+  leftHalf.style.backgroundColor="#ff85a2"; leftHalf.style.left=rect.left+"px"; leftHalf.style.top=rect.top+"px"; leftHalf.style.borderRadius="25px";
+  rightHalf.style.position="absolute"; rightHalf.style.width=rect.width/2+"px"; rightHalf.style.height=rect.height+"px";
+  rightHalf.style.backgroundColor="#ff85a2"; rightHalf.style.left=(rect.left+rect.width/2)+"px"; rightHalf.style.top=rect.top+"px"; rightHalf.style.borderRadius="25px";
+  document.body.appendChild(leftHalf); document.body.appendChild(rightHalf);
+  leftHalf.style.animation="crackButtonLeft 1s forwards";
+  rightHalf.style.animation="crackButtonRight 1s forwards";
+  loveBtn.remove();
+  for(let i=0;i<1000;i++){
+    const heart=document.createElement("div");
+    heart.style.position="absolute";
+    heart.style.left=(rect.left + rect.width/2)+"px";
+    heart.style.top=(rect.top + rect.height/2)+"px";
+    heart.style.width=(5+Math.random()*10)+"px";
+    heart.style.height=heart.style.width;
+    heart.style.backgroundColor=["#ff2d55","#ff69b4","#ff85a2","#ffb6c1","#ffc0cb"][Math.floor(Math.random()*5)];
+    heart.style.clipPath="polygon(50% 0%, 61% 8%, 70% 25%, 50% 100%, 30% 25%, 39% 8%)";
+    heart.style.opacity=0.9;
+    heart.style.animation=`explode 1.5s forwards`;
+    document.body.appendChild(heart);
+    setTimeout(()=>{heart.remove();},1500);
+  }
+  setTimeout(loadThirdPage,1500);
+}
+
+// ------------------ PAGE 3 ------------------
+function loadThirdPage(){
+  currentPage=3;
+  document.getElementById("container").style.display="none";
+  const page3Div=document.createElement("div");
+  page3Div.style.position="relative";
+  page3Div.style.width="100%";
+  page3Div.style.height="100%";
+  page3Div.style.display="flex";
+  page3Div.style.justifyContent="center";
+  page3Div.style.alignItems="center";
+  page3Div.style.backgroundImage="url('https://as2.ftcdn.net/jpg/03/02/11/69/1000_F_302116988_bJUTgydgP30WWQCqQTFUcDAdZ7Y6pMzG.jpg')";
+  page3Div.style.backgroundSize="cover";
+  page3Div.style.backgroundPosition="center";
+  const overlay=document.createElement("div");
+  overlay.style.position="absolute"; overlay.style.top=0; overlay.style.left=0;
+  overlay.style.width="100%"; overlay.style.height="100%";
+  overlay.style.backgroundColor="rgba(255,255,255,0.4)";
+  page3Div.appendChild(overlay);
+  const contentDiv=document.createElement("div");
+  contentDiv.style.position="relative";
+  contentDiv.style.maxWidth="500px";
+  contentDiv.style.padding="30px 20px";
+  contentDiv.style.textAlign="center";
+  contentDiv.style.color="#000";
+  contentDiv.style.lineHeight="1.8";
+  contentDiv.style.fontSize="18px";
+  contentDiv.style.animation="fadeInText 2s";
+  contentDiv.innerHTML=`
+  <p>Kunji, I don't think you realize how genuinely happy you make me. I can't even express it.</p>
+  <p>If I could help you feel as happy as you make me, I would feel like I've done something right.</p>
+  <p>You are my moon and all the stars, and I know I am constantly showering you with love and compliments, and I would never want to overwhelm you unintentionally, but I swear I could go on for days about how much happier you have made me.</p>
+  <p>Thank you for being the best thing that ever happened to me.</p>
+  <p><b>I love you, Kunji ❤️</b></p>`;
+  page3Div.appendChild(contentDiv);
+  document.body.appendChild(page3Div);
+  function spawnHeart(){
+    const heart=document.createElement("div");
+    heart.style.position="absolute";
+    heart.style.width=(5+Math.random()*10)+"px";
+    heart.style.height=heart.style.width;
+    heart.style.left=Math.random()*window.innerWidth+"px";
+    heart.style.top="-20px";
+    heart.style.backgroundColor=["#ff2d55","#ff69b4","#ff85a2","#ffb6c1","#ffc0cb"][Math.floor(Math.random()*5)];
+    heart.style.clipPath="polygon(50% 0%, 61% 8%, 70% 25%, 50% 100%, 30% 25%, 39% 8%)";
+    heart.style.opacity=0.8;
+    heart.style.animation=`floatHeart ${5+Math.random()*5}s linear forwards`;
+    page3Div.appendChild(heart);
+    setTimeout(()=>{heart.remove();},10000);
+  }
+  setInterval(spawnHeart,50);
+}
+
+// ------------------ INIT ------------------
+// loadFirstPage(); --> Removed because preloader triggers Page 1
+</script>
+</body>
+</html>
