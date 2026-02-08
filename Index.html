@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Koche Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Dancing Script', cursive; font-weight:bold; }
+html, body { width:100%; height:100%; overflow:hidden; background:#fde4e4; display:flex; justify-content:center; align-items:center; text-align:center; }
+
+.petal { position:absolute; color:#d8516f; font-size:1.5rem; animation: float linear infinite; opacity:0.7; }
+@keyframes float { 0% { transform: translateY(-10px) rotate(0deg); opacity:0.7; } 100% { transform: translateY(110vh) rotate(360deg); opacity:0; } }
+
+.center-text { color:#4a2f2f; line-height:1.5; margin:10px; opacity:0; transition: opacity 1s ease; font-weight:bold; }
+
+.btn { 
+  margin-top:20px; 
+  padding:15px 25px; 
+  font-size:1.2rem; 
+  border:none; 
+  border-radius:30px; 
+  background:#b23a55; 
+  color:#fff; 
+  cursor:pointer; 
+  transition:all 0.3s ease; 
+  font-weight:bold;
+}
+.btn:hover { transform: scale(1.05); }
+
+#yesBtn { background:#b23a55; }
+#yesBtn:hover { background:#9e3145; }
+#noBtn { background:#ffc0cb; font-size:0.8rem; }
+#noBtn:hover { background:#ffb6b6; }
+
+.page { position:absolute; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+.hidden { display:none; }
+
+.heart { position:absolute; color:#ff4d6d; font-size:1.5rem; animation:fall linear infinite; }
+@keyframes fall { 0% { transform: translateY(-10px); opacity:1; } 100% { transform: translateY(110vh); opacity:0; } }
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop autoplay></audio>
+
+<script>
+// Function to create free-floating rose petals
+function createPetals(count){
+  for(let i=0;i<count;i++){
+    const petal = document.createElement('div');
+    petal.classList.add('petal');
+    petal.innerHTML='🌹';
+    petal.style.left=Math.random()*100+'vw';
+    petal.style.animationDuration=(6+Math.random()*6)+'s';
+    petal.style.fontSize=(15+Math.random()*25)+'px';
+    document.body.appendChild(petal);
+  }
+}
+createPetals(30);
+</script>
+
+<!-- PAGE 1 -->
+<div id="page1" class="page">
+  <div class="center-text" style="opacity:1; font-size:2rem;">Koche, this is for you ❤️</div>
+  <button class="btn" id="startBtn">Start</button>
+</div>
+
+<!-- PAGE 2 (restored to original version) -->
+<div id="page2" class="page hidden">
+  <div class="center-text" id="page2Seq" style="font-size:2rem; opacity:0;"></div>
+  <div class="center-text" id="page2Content" style="font-size:1.5rem; opacity:0; margin-top:20px;">
+    Till now I didn’t expect this.<br>
+    But somewhere between our conversations and silences…<br>
+    you started to matter.<br>
+    I don’t want to rush you.<br>
+    I don’t want to complicate what we have but still, it’s been 1 year.<br>
+    But I can’t ignore that my heart feels different around you.<br>
+    And I think you deserve honesty.
+  </div>
+  <button class="btn hidden" id="knowBtn">DO YOU WANNA KNOW???</button>
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" class="page hidden">
+  <div class="center-text" id="loveText" style="font-size:2.5rem; opacity:0;">I LOVE YOU KOCHE ❤️</div>
+  <div class="center-text" id="subText" style="font-size:1.5rem; opacity:0; margin-top:20px;">
+    You make me happy and I think if you are there I'll be very happy for the rest of my life.<br>
+    I wish to take care of you and keep you happy forever ❤️
+  </div>
+  <button class="btn" id="askBtn" style="opacity:0;">Can I ask you something?</button>
+</div>
+
+<!-- PAGE 4 -->
+<div id="page4" class="page hidden">
+  <div class="center-text" id="valText" style="font-size:2rem; opacity:0;">WILL YOU BE MY VALENTINE??</div>
+  <div class="center-text" id="valSub" style="font-size:1rem; margin-top:10px; opacity:0;">For today, tomorrow, and forever</div>
+  <div style="margin-top:30px;">
+    <button class="btn" id="yesBtn" style="opacity:0; transform:scale(1.1);">Yes</button>
+    <button class="btn" id="noBtn" style="opacity:0;">No</button>
+  </div>
+</div>
+
+<!-- PAGE 5 -->
+<div id="page5" class="page hidden" style="background:#ffe4e1;">
+  <div class="center-text" style="font-size:3rem; opacity:1;">Yey 🎉🥳🥂</div>
+</div>
+
+<script>
+// Buttons and navigation
+const startBtn = document.getElementById('startBtn');
+const page1 = document.getElementById('page1');
+const page2 = document.getElementById('page2');
+const page2Seq = document.getElementById('page2Seq');
+const page2Content = document.getElementById('page2Content');
+const knowBtn = document.getElementById('knowBtn');
+
+startBtn.addEventListener('click', () => {
+  page1.style.opacity = 0;
+  setTimeout(() => {
+    page1.classList.add('hidden');
+    page2.classList.remove('hidden');
+    // Page 2 original sequence
+    const messages = [
+      "Koche, Before going in .....",
+      "Onnu chirikkedo 🥰",
+      "See ena resa aa chiri kanan"
+    ];
+    let i = 0;
+    function showNext(){
+      if(i < messages.length){
+        page2Seq.innerHTML = messages[i];
+        page2Seq.style.opacity = 1;
+        setTimeout(() => {
+          page2Seq.style.opacity = 0;
+          i++;
+          setTimeout(showNext, 500);
+        }, 2000);
+      } else {
+        page2Content.style.opacity = 1;
+        knowBtn.classList.remove('hidden');
+        knowBtn.style.opacity = 1;
+      }
+    }
+    showNext();
+  },1500);
+});
+
+knowBtn.addEventListener('click', () => {
+  page2.style.opacity = 0;
+  setTimeout(() => {
+    page2.classList.add('hidden');
+    page3.classList.remove('hidden');
+    startPage3();
+    createPetals(15); // free-floating petals on Page 3
+  },1500);
+});
+
+// PAGE 3
+const page3 = document.getElementById('page3');
+const loveText = document.getElementById('loveText');
+const subText = document.getElementById('subText');
+const askBtn = document.getElementById('askBtn');
+
+function startPage3(){
+  loveText.style.transition="opacity 1.5s ease";
+  loveText.style.opacity=1;
+  setTimeout(() => {
+    loveText.style.transform = `translateY(-40px)`;
+    subText.style.transition="opacity 1.5s ease";
+    subText.style.opacity=1;
+  }, 2000);
+  setTimeout(() => {
+    askBtn.style.transition="opacity 1s ease";
+    askBtn.style.opacity=1;
+  },3500);
+}
+
+askBtn.addEventListener('click', () => {
+  page3.style.opacity = 0;
+  setTimeout(() => {
+    page3.classList.add('hidden');
+    page4.classList.remove('hidden');
+    startPage4();
+    createPetals(15); // free-floating petals on Page 4
+  },1500);
+});
+
+// PAGE 4
+const yesBtn = document.getElementById('yesBtn');
+const noBtn = document.getElementById('noBtn');
+const page5 = document.getElementById('page5');
+const valText = document.getElementById('valText');
+const valSub = document.getElementById('valSub');
+
+let yesScale = 1.1;
+
+function startPage4(){
+  valText.style.transition="opacity 1s ease";
+  valText.style.opacity=1;
+  setTimeout(()=>{
+    valSub.style.transition="opacity 1s ease";
+    valSub.style.opacity=1;
+    yesBtn.style.transition="opacity 1s ease";
+    noBtn.style.transition="opacity 1s ease";
+    yesBtn.style.opacity=1;
+    noBtn.style.opacity=1;
+  },1000);
+}
+
+yesBtn.addEventListener('click', () => {
+  page4.style.opacity = 0;
+  setTimeout(() => {
+    page4.classList.add('hidden');
+    page5.classList.remove('hidden');
+    startPage5();
+  },1500);
+});
+
+noBtn.addEventListener('click', () => {
+  const x = Math.random()*70;
+  const y = Math.random()*70;
+  noBtn.style.position = 'absolute';
+  noBtn.style.left = x + '%';
+  noBtn.style.top = y + '%';
+  yesScale += 0.1;
+  yesBtn.style.transform = `scale(${yesScale})`;
+});
+
+// PAGE 5
+function startPage5(){
+  for(let i=0;i<100;i++){
+    const heart=document.createElement('div');
+    heart.classList.add('heart');
+    heart.innerHTML='❤️';
+    heart.style.left=Math.random()*100+'vw';
+    heart.style.animationDuration=(3+Math.random()*5)+'s';
+    heart.style.fontSize=(15 + Math.random()*20)+'px';
+    page5.appendChild(heart);
+  }
+}
+</script>
+</body>
+</html>
